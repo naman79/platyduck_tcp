@@ -15,6 +15,28 @@ public class DevApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DevApplication.class, args);
 
+		String serverHost = "localhost"; // Replace with the server's host address
+		int serverPort = 8181; // Replace with the server's port
+
+		try (Socket socket = new Socket(serverHost, serverPort);
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			 PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
+
+			System.out.println("Connected to TCP server at " + serverHost + ":" + serverPort);
+
+			String message = "Hello, server!";
+			writer.println(message);
+			System.out.println("Sent message to server: " + message);
+
+			String response = reader.readLine();
+			System.out.println("Received response from server: " + response);
+
+		} catch (IOException e) {
+			System.err.println("Error connecting to TCP server: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+
 		try (ServerSocket serverSocket = new ServerSocket(8080)) {
 			System.out.println("TCP Server started on port 8080");
 
